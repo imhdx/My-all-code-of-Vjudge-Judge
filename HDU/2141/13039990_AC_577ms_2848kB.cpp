@@ -1,0 +1,58 @@
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+int a[502];
+int b[502];
+int c[502];
+int d[260000];
+int main()
+{
+	int q,w,e;
+	int qwe=1;
+	while (scanf("%d%d%d",&q,&w,&e)!=EOF)
+	{
+		int i,j,k=0;
+		for (i=0;i<q;i++)
+		scanf("%d",&a[i]);
+		for (i=0;i<w;i++)
+		scanf("%d",&b[i]);
+		for (i=0;i<e;i++)
+		scanf("%d",&c[i]);
+		k=0;
+		for (i=0;i<q;i++)
+		{
+			for (j=0;j<w;j++)
+			d[k++]=a[i]+b[j];
+		}
+		sort(d,d+k);
+		int t;
+		scanf("%d",&t);
+		printf("Case %d:\n",qwe++);
+		while (t--)
+		{
+			int xx;
+			scanf("%d",&xx);
+			int flag=0;
+			for (i=0;i<e;i++)
+			{
+				if (flag==1) break;
+				if ((xx-c[i])<d[0]||(xx-c[i])>d[k-1]) continue;
+				int mid;
+				int st=0;
+				int la=k-1;
+				while (st<=la)
+				{
+					mid=(la+st)/2;
+					if (c[i]+d[mid]==xx) {flag=1;break;}
+					else if (c[i]+d[mid]<xx) st=mid+1;
+					else if (c[i]+d[mid]>xx) la=mid-1;
+				}
+				if (flag==1) break;
+			}
+			if (flag==1) printf("YES\n");
+			else
+			printf("NO\n");
+		}		
+	}
+	return 0;
+}

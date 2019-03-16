@@ -1,0 +1,86 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<queue>
+using namespace std;
+int n,m;
+int map[25][25];
+int vis[25][25];
+int v[5];
+int xx,x2,yy,y2,ans;
+int to[4][2]=
+{
+    1,0,-1,0,
+    0,1,0,-1
+};
+struct node
+{
+    int x,y,step;
+    friend bool operator<(node a1,node a2)
+    {
+        return a2.step<a1.step;
+    }
+};
+priority_queue<node> Q;
+int check(int x,int y)
+{
+    if(x<0 || y<0 || x>=n || y>=m || map[x][y]<0|| vis[x][y])
+        return 1;
+    return 0;
+}
+int bfs()
+{
+    int i;
+    node a,next;
+    memset(vis,0,sizeof(vis));
+    a.x = xx;
+    a.y = yy;
+    a.step = 0;
+    vis[a.x][a.y] = 1;
+    Q.push(a);
+    while(!Q.empty())
+    {
+        a = Q.top();
+        Q.pop();
+        if(a.x == x2 && a.y == y2)
+        return a.step;
+        for(i = 0; i<4; i++)
+        {
+            next = a;
+            next.x +=to[i][0];
+            next.y +=to[i][1];
+            if(check(next.x,next.y))
+                continue;
+            next.step+=v[map[next.x][next.y]];
+            vis[next.x][next.y] = 1;
+            Q.push(next);
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int i,j,cas = 1;
+    char s[100];
+    while(scanf("%d%d",&n,&m)!=EOF)
+    {
+        for (i=3;i>=1;i--)
+            scanf("%d",&v[i]);
+        for(i = 0; i<n; i++)
+        {
+            scanf("%s",s);
+            for(j = 0; s[j]; j++)
+            {
+                if(s[j]=='T') map[i][j] = 1;
+                else if(s[j] == '.') map[i][j] = 2;
+                else if(s[j] == '#') map[i][j] = 3;
+                else if(s[j] == '@') map[i][j] = -1;
+            }
+        }
+        scanf("%d%d%d%d",&xx,&yy,&x2,&y2);
+        ans = bfs();
+        printf("Case %d: %d\n",cas++,ans);
+    }
+    return 0;
+}
+
